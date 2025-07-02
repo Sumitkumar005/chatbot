@@ -10,3 +10,8 @@ gTTS
 speechrecognition
 pydub
 tavily-python
+python-dotenv
+pandas
+openpyxl        # For XLS/XLSX
+PyPDF2          # For PDF text extraction
+    # Built-in, for SQLite
