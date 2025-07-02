@@ -358,10 +358,16 @@ def rag_query(query, retriever, lang_code):
     if retriever is None:
         return "Error: Knowledge base not loaded.", []
     
+    translated_query = query
     if lang_code != "en":
-        query = GoogleTranslator(source=lang_code, target="en").translate(query)
+        try:
+            translated_query = GoogleTranslator(source=lang_code, target="en").translate(query)
+            st.write(f"Translated query: {translated_query}")  # Debug
+        except Exception as e:
+            st.error(f"Translation failed: {str(e)}. Using original query.")
+            translated_query = query  # Fallback to original if translation fails
     
-    docs = retriever.get_relevant_documents(query)
+    docs = retriever.get_relevant_documents(translated_query)
     context = "\n".join([doc.page_content for doc in docs])
     
     prompt = f"""
@@ -369,18 +375,25 @@ You are a helpful assistant for university and visa information. Answer concisel
 
 Context: {context}
 
-Question: {query}
+Question: {translated_query}
 Answer:
 """
     try:
         response = model.generate_content(prompt)
         if lang_code != "en":
-            response_text = GoogleTranslator(source="en", target=lang_code).translate(response.text)
+            try:
+                response_text = GoogleTranslator(source="en", target=lang_code).translate(response.text)
+            except Exception as e:
+                st.error(f"Translation to {lang_code} failed: {str(e)}. Returning English.")
+                response_text = response.text
         else:
             response_text = response.text
-        follow_ups = generate_follow_ups(query)
+        follow_ups = generate_follow_ups(translated_query)
         if lang_code != "en":
-            follow_ups = [GoogleTranslator(source="en", target=lang_code).translate(q) for q in follow_ups]
+            try:
+                follow_ups = [GoogleTranslator(source="en", target=lang_code).translate(q) for q in follow_ups]
+            except Exception as e:
+                st.error(f"Follow-up translation failed: {str(e)}. Returning English follow-ups.")
         return response_text, follow_ups
     except Exception as e:
         return f"Error generating response: {str(e)}", []
