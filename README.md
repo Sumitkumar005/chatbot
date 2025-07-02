@@ -1,60 +1,56 @@
-Sample University Chatbot
-A chatbot designed to provide accurate information about Sample University using Retrieval-Augmented Generation (RAG) with the Google Gemini API.
+University Chatbot
+A chatbot for university information using RAG with Google Gemini API and web scraping with Tavily API.
 Features
 
-Answers queries about academics, admissions, fees, and more based solely on sample_university_info.txt.
-Enhanced UI/UX with a sidebar featuring example questions, quick links, and contact info.
-Chat history with timestamps displayed in a conversation-like layout.
-Built with Streamlit, LangChain, FAISS, and Google Gemini API.
+Answers queries from university_info.txt and scraped web data (e.g., MIT website).
+Multilingual support (English, Hindi, Spanish, etc.).
+Text-to-Speech (TTS) for responses.
+Feedback system (thumbs-up/thumbs-down).
+Follow-up question suggestions.
+Admin feature to scrape websites and save data as text files.
+UI with sidebar, chat history, and example questions.
+Deployed on Streamlit Cloud.
 
-Setup Instructions (Local)
+Setup (Local)
 
-Clone the Repository
-git clone https://github.com/your-username/sample-university-chatbot.git
-cd sample-university-chatbot
-
-
-Create a Virtual Environment
-python3 -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-
-
-Install Dependencies
-pip install -r requirements.txt
-
-
-Configure SecretsCreate a .streamlit/secrets.toml file with:
-[secrets]
+Clone: git clone https://github.com/sumitkumar005/chatbot.git
+Create virtual environment: python -m venv venv
+Activate: venv\Scripts\activate (Windows) or source venv/bin/activate (Linux/Mac)
+Install dependencies: pip install -r requirements.txt
+Create .streamlit/secrets.toml:[secrets]
 GOOGLE_API_KEY = "your-actual-gemini-api-key"
+TAVILY_API_KEY = "your-actual-tavily-api-key"
 
 
-Add DatasetPlace sample_university_info.txt in the project root directory.
+Add university_info.txt to the root.
+Run: streamlit run main.py
 
-Run the Application
-streamlit run main.py
+Deployment (Streamlit Cloud)
 
-
-
-Deployment Instructions (Streamlit Cloud)
-
-Push the repository to GitHub, ensuring .gitignore excludes venv/, vectorstore/, and .streamlit/secrets.toml.
-Sign up at share.streamlit.io.
-Create a new app, select your repo, and set main.py as the entry point.
-In the app settings, add a secret:GOOGLE_API_KEY = "your-actual-gemini-api-key"
+Push to GitHub (https://github.com/sumitkumar005/chatbot).
+At share.streamlit.io, create an app, select the repo, set main.py as the entry point.
+Add secrets in app settings:[secrets]
+GOOGLE_API_KEY = "your-actual-gemini-api-key"
+TAVILY_API_KEY = "your-actual-tavily-api-key"
 
 
-Deploy and test the live URL.
+Deploy and test: https://sumit-chatbot.streamlit.app/.
+
+Admin Features
+
+Scrape Website: Enter a URL (e.g., https://www.mit.edu) in the admin section (password: admin123) to scrape content. Data is saved in scraped_data/ as text files and indexed with FAISS.
+Password: Replace admin123 with a secure password in production.
 
 Test Queries
 
-"What programs does Sample University offer?"
-"What are the tuition fees?"
-"When are application deadlines?"
-"What financial aid is available?"
+"What programs does the university offer?"
+"What are the tuition fees?" (try in Hindi: "ट्यूशन फीस क्या है?")
+"What programs does MIT offer?" (after scraping https://www.mit.edu)
+Click follow-up questions to explore more.
 
 Notes
 
-Ensure sample_university_info.txt is present before running.
-The FAISS index is generated on the first run and saved in vectorstore/.
-Chat history is stored in session state and resets when the app closes.
+Uses FAISS for RAG and session state for chat history (no MongoDB).
+Scraped data is stored in scraped_data/ and indexed with university_info.txt.
+Ensure university_info.txt is present.
+Admin password (admin123) should be changed for security.

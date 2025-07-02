@@ -5,4 +5,8 @@ langchain-google-genai
 faiss-cpu
 google-generativeai
 pytz
-
+deep_translator
+gTTS
+speechrecognition
+pydub
+tavily-python
